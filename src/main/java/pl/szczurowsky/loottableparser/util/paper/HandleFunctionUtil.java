@@ -8,8 +8,6 @@ import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.szczurowsky.loottableparser.pojo.LootEntry;
-import pl.szczurowsky.loottableparser.pojo.integer.LootInteger;
-import pl.szczurowsky.loottableparser.pojo.integer.LootUniformInteger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,55 +34,44 @@ public class HandleFunctionUtil {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             String function = jsonObject.get("function").getAsString();
             if (!function.contains(":")) function = "minecraft:" + function;
-            try {
-                switch (function) {
-                    case "minecraft:set_count" -> {
-                        int count;
-                        if (!jsonObject.has("count")) {
-                            count = 1;
-                        } else if(jsonObject.get("count").isJsonObject()) {
-                            count = new LootUniformInteger(jsonObject.getAsJsonObject("count").get("min").getAsInt(), jsonObject.getAsJsonObject("count").get("max").getAsInt()).getValue();
-                        } else {
-                            count = jsonObject.get("count").getAsInt();
-                        }
-                        boolean add;
-                        if (jsonObject.has("add")) add = jsonObject.get("add").getAsBoolean();
-                        else add = false;
-                        if (add) itemStack.setAmount(itemStack.getAmount() + count);
-                        else itemStack.setAmount(count);
-                    }
-                    case "minecraft:set_damage" -> {
-                        int damage = jsonObject.get("damage").getAsInt();
-                        boolean add;
-                        if (jsonObject.has("add")) add = jsonObject.get("add").getAsBoolean();
-                        else add = false;
-                        if (add) itemStack.setDurability((short) (itemStack.getDurability() + damage));
-                        else itemStack.setDurability((short) damage);
-                    }
-                    case "minecraft:set_nbt" -> {
-                        String tag = jsonObject.get("tag").getAsString();
-                        NBT.modify(itemStack, nbt -> {
-                            nbt.mergeCompound(NBT.parseNBT(tag));
-                        });
-                    }
-                    case "minecraft:set_name" -> {
-                        JsonArray name = jsonObject.getAsJsonArray("name");
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        itemMeta.displayName(JSONComponentSerializer.json().deserialize(name.toString()));
-                        itemStack.setItemMeta(itemMeta);
-                    }
-                    case "minecraft:set_lore" -> {
-                        JsonArray lore = jsonObject.getAsJsonArray("lore");
-                        List<Component> textComponents = new ArrayList<>();
-                        lore.forEach(jsonElement1 -> textComponents.add(JSONComponentSerializer.json().deserialize(jsonElement1.toString())));
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        itemMeta.lore(textComponents);
-                        itemStack.setItemMeta(itemMeta);
-                    }
-                    default -> {}
+            switch (function) {
+                case "minecraft:set_count" -> {
+                    int count = jsonObject.get("count").getAsInt();
+                    boolean add;
+                    if (jsonObject.has("add")) add = jsonObject.get("add").getAsBoolean();
+                    else add = false;
+                    if (add) itemStack.setAmount(itemStack.getAmount() + count);
+                    else itemStack.setAmount(count);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                case "minecraft:set_damage" -> {
+                    int damage = jsonObject.get("damage").getAsInt();
+                    boolean add;
+                    if (jsonObject.has("add")) add = jsonObject.get("add").getAsBoolean();
+                    else add = false;
+                    if (add) itemStack.setDurability((short) (itemStack.getDurability() + damage));
+                    else itemStack.setDurability((short) damage);
+                }
+                case "minecraft:set_nbt" -> {
+                    String tag = jsonObject.get("tag").getAsString();
+                    NBT.modify(itemStack, nbt -> {
+                        nbt.mergeCompound(NBT.parseNBT(tag));
+                    });
+                }
+                case "minecraft:set_name" -> {
+                    JsonArray name = jsonObject.getAsJsonArray("name");
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.displayName(JSONComponentSerializer.json().deserialize(name.getAsString()));
+                    itemStack.setItemMeta(itemMeta);
+                }
+                case "minecraft:set_lore" -> {
+                    JsonArray lore = jsonObject.getAsJsonArray("lore");
+                    List<Component> textComponents = new ArrayList<>();
+                    lore.forEach(jsonElement1 -> textComponents.add(JSONComponentSerializer.json().deserialize(jsonElement1.getAsString())));
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.lore(textComponents);
+                    itemStack.setItemMeta(itemMeta);
+                }
+                default -> {}
             }
         });
     }

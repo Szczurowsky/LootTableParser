@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("maven-publish")
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 group = "pl.szczurowsky"
@@ -28,6 +28,11 @@ dependencies {
     testImplementation("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 }
 
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>{
+    relocate("de.tr7zw.changeme.nbtapi", "pl.szczurowsky.loottableparser.lib.nbtapi")
+    relocate("com.google.gson", "pl.szczurowsky.loottableparser.lib.gson")
+}
+
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
@@ -49,34 +54,4 @@ java {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("library") {
-
-            from(components.getByName("java"))
-
-            pom.withXml {
-                val repositories = asNode().appendNode("repositories")
-                project.repositories.findAll(closureOf<Any> {
-                    if (this is MavenArtifactRepository && this.url.toString().startsWith("https")) {
-                        val repository = repositories.appendNode("repository")
-                        repository.appendNode("id", this.url.toString().replace("https://", "").replace("/", "-").replace(".", "-").trim())
-                        repository.appendNode("url", this.url.toString().trim())
-                    }
-                })
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = "szczurowsky"
-            url = uri("https://repo.szczurowsky.pl/${if (version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"}")
-            credentials {
-                username = findProperty(name + "Username")?.let { it as String } ?: System.getenv(name.toUpperCase() + "_USERNAME")
-                password = findProperty(name + "Password")?.let { it as String } ?: System.getenv(name.toUpperCase() + "_PASSWORD")
-            }
-        }
-    }
 }
