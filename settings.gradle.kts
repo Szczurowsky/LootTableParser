@@ -1,2 +1,2 @@
-rootProject.name = "LootTableParser"
+rootProject.name = "loot-table-parse"
 

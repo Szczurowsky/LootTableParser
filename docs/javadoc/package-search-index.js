@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"pl.szczurowsky.loottableparser"},{"l":"pl.szczurowsky.loottableparser.exception"},{"l":"pl.szczurowsky.loottableparser.pojo"},{"l":"pl.szczurowsky.loottableparser.pojo.integer"},{"l":"pl.szczurowsky.loottableparser.util"},{"l":"pl.szczurowsky.loottableparser.util.paper"}];updateSearchResults();
