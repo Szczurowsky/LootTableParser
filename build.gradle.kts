@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("de.tr7zw:item-nbt-api:2.12.1")
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.0.0")
