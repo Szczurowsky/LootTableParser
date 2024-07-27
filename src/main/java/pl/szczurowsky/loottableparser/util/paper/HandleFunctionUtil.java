@@ -8,7 +8,6 @@ import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.szczurowsky.loottableparser.pojo.LootEntry;
-import pl.szczurowsky.loottableparser.pojo.integer.LootInteger;
 import pl.szczurowsky.loottableparser.pojo.integer.LootUniformInteger;
 
 import java.util.ArrayList;
@@ -68,10 +67,24 @@ public class HandleFunctionUtil {
                         });
                     }
                     case "minecraft:set_name" -> {
-                        JsonArray name = jsonObject.getAsJsonArray("name");
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        itemMeta.displayName(JSONComponentSerializer.json().deserialize(name.toString()));
-                        itemStack.setItemMeta(itemMeta);
+                        if (jsonObject.get("name").isJsonArray()) {
+                            JsonArray name = jsonObject.getAsJsonArray("name");
+                            List<Component> textComponents = new ArrayList<>();
+                            name.forEach(jsonElement1 -> textComponents.add(JSONComponentSerializer.json().deserialize(jsonElement1.toString())));
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemMeta.displayName(textComponents.get(0));
+                            itemStack.setItemMeta(itemMeta);
+                        } else if (jsonObject.get("name").isJsonObject()) {
+                            Component textComponent = JSONComponentSerializer.json().deserialize(jsonObject.getAsJsonObject("name").toString());
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemMeta.displayName(textComponent);
+                            itemStack.setItemMeta(itemMeta);
+                        } else {
+                            String name = jsonObject.get("name").getAsString();
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemMeta.displayName(JSONComponentSerializer.json().deserialize("{\"text\":\"" + name + "\"}"));
+                            itemStack.setItemMeta(itemMeta);
+                        }
                     }
                     case "minecraft:set_lore" -> {
                         JsonArray lore = jsonObject.getAsJsonArray("lore");

@@ -4,10 +4,13 @@ plugins {
 }
 
 group = "pl.szczurowsky"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
     maven {
         url = uri("https://repo.szczurowsky.pl/releases")
     }
@@ -15,17 +18,19 @@ repositories {
         name = "CodeMC"
         url = uri("https://repo.codemc.io/repository/maven-public/")
     }
+    mavenLocal()
 }
 
 dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("de.tr7zw:item-nbt-api:2.13.1")
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.1.0")
 
     testImplementation(platform("org.junit:junit-bom:5.10.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.20:3.68.0")
 }
 
 
