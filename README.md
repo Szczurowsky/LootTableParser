@@ -33,11 +33,11 @@ Framework Core
 <dependency>
     <groupId>pl.szczurowsky</groupId>
     <artifactId>loot-table-parse</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 ```kotlin
-implementation("pl.szczurowsky:loot-table-parse:1.0.1")
+implementation("pl.szczurowsky:loot-table-parse:1.0.2")
 ```
 
 ### Important note!
