@@ -22,12 +22,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("de.tr7zw:item-nbt-api:2.12.4")
+    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("de.tr7zw:item-nbt-api:2.13.1")
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.1.0")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.20:3.68.0")
