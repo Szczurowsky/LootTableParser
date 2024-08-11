@@ -60,6 +60,13 @@ public class HandleFunctionUtil {
                         if (add) itemStack.setDurability((short) (itemStack.getDurability() + damage));
                         else itemStack.setDurability((short) damage);
                     }
+                    case "minecraft:set_components" -> {
+                        JsonObject components = jsonObject.getAsJsonObject("components");
+                        NBT.modify(itemStack, nbt -> {
+                            nbt.mergeCompound(NBT.parseNBT(components.toString()));
+                        });
+
+                    }
                     case "minecraft:set_nbt" -> {
                         String tag = jsonObject.get("tag").getAsString();
                         NBT.modify(itemStack, nbt -> {
