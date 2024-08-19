@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.tr7zw.changeme.nbtapi.NBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.szczurowsky.loottableparser.pojo.LootEntry;
@@ -12,6 +13,7 @@ import pl.szczurowsky.loottableparser.pojo.integer.LootUniformInteger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utility class for handling loot functions
@@ -62,9 +64,21 @@ public class HandleFunctionUtil {
                     }
                     case "minecraft:set_components" -> {
                         JsonObject components = jsonObject.getAsJsonObject("components");
-                        NBT.modify(itemStack, nbt -> {
-                            nbt.mergeCompound(NBT.parseNBT(components.toString()));
-                        });
+                        if (components.has("minecraft:enchantments")) {
+                            JsonObject enchantments = components.getAsJsonObject("minecraft:enchantments");
+                            if (enchantments.has("levels")) {
+                                JsonObject levels = enchantments.getAsJsonObject("levels");
+                                levels.asMap().forEach((enchantment, level) -> {
+                                    Optional<Enchantment> enchantmentOptional = EnchantmentUtil.getEnchantment(enchantment);
+                                    enchantmentOptional.ifPresent(value -> itemStack.addUnsafeEnchantment(value, level.getAsInt()));
+                                });
+                            } else {
+                                enchantments.asMap().forEach((enchantment, level) -> {
+                                    Optional<Enchantment> enchantmentOptional = EnchantmentUtil.getEnchantment(enchantment);
+                                    enchantmentOptional.ifPresent(value -> itemStack.addUnsafeEnchantment(value, level.getAsInt()));
+                                });
+                            }
+                        }
 
                     }
                     case "minecraft:set_nbt" -> {
