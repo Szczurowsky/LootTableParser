@@ -25,7 +25,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("de.tr7zw:item-nbt-api:2.13.1")
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains:annotations:24.1.0")
+    compileOnly("org.jetbrains:annotations:26.0.0")
 
     testImplementation(platform("org.junit:junit-bom:5.10.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
